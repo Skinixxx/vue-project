@@ -55,3 +55,26 @@ router.post('/client',async(req,res)=>{
         res.status(500).json({error:'Iternal server error'});
     }
 });
+/// это нуждается в доработке (безопастности чтобы не удалили просто так)
+router.delete('/clients:id',async(req,res)=>{
+    
+    const id = parseInt(req.params.id);
+        if(isNaN(id)){
+            return res.status(400).json({error:'Invalid client id'});
+        }
+
+    try {
+        const clients = await readData();
+        const initialLength = clients.length;
+        const delClient = clients.filter(item=> item.id < initialLength )
+
+        if(delClient.length === initialLength){
+            return res.status(404).json({error:'Client not found'});
+        }
+
+        await writeData(delClient);
+        res.status(204).send(); // send когда нет контента типо
+    } catch (error) {
+        res.status(500).json({error:'Iternal server error'});
+    }
+});
