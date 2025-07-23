@@ -1,41 +1,59 @@
-<script setup>
-import ClientCard from './components/ClientCard.vue';
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
-
+<!-- src/App.vue -->
 <template>
-  <ClientCard />
-  <v-btn color="primary">Кнопка Vuetify</v-btn>
-  
+  <v-app>
+    <!-- App Bar -->
+    <v-app-bar color="primary" dark elevation="2">
+      <v-app-bar-title class="d-flex align-center">
+        <v-icon class="mr-2">mdi-account-cog</v-icon>
+        Бухгалтерский дашборд
+      </v-app-bar-title>
+      <v-spacer />
+      <v-btn icon>
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <!-- Main Content -->
+    <v-main>
+      <v-container fluid class="py-6 px-4">
+        <ClientDashboard />
+      </v-container>
+    </v-main>
+
+    <!-- Footer -->
+    <v-footer color="primary" dark padless>
+      <v-col class="text-center white--text py-2">
+        Бухгалтерский дашборд &copy; {{ new Date().getFullYear() }}
+      </v-col>
+    </v-footer>
+  </v-app>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script setup lang="ts">
+import ClientDashboard from '@/components/ClientDashboard.vue';
+</script>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Убираем жёсткие ограничения у v-main */
+.v-main {
+  padding: 0;
+  min-width: 400px;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+/* Чуть больше пространства под AppBar */
+.v-app-bar {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* Сделать footer по ширине экрана без лишнего отступа */
+.v-footer {
+  width: 100%;
 }
 </style>

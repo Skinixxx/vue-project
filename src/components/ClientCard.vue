@@ -1,120 +1,94 @@
-
 <template>
-    <v-card
+    <v-card class="client-card">
+      <v-card-title class="d-flex justify-space-between align-center">
+        <div class="text-truncate">{{ client.name }}</div>
+        <v-chip :color="statusColor" small>
+          {{ statusText }}
+        </v-chip>
+      </v-card-title>
+      
+      <v-card-text>
+        <div class="mb-2">
+          <v-icon small class="mr-1">mdi-update</v-icon>
+          <span class="text-caption">Обновлено: {{ formattedDate }}</span>
+        </div>
+      </v-card-text>
+      
+      <v-card-actions class="d-flex justify-space-between">
+        <v-btn 
+          color="primary"
+          variant="outlined"
+          @click="changeStatus"
+        >
+          Сменить статус
+        </v-btn>
         
-        class = "client card"
-        title="Card title" 
-        variant="elevated"
-        @mouseover="isHovered = true"
-        @mouseleave="isHovered = false"
-        
-    >
-        <v-card-item class="card-header">
-            <div class="header-content">
-                <v-card-title class="text-h6">
-                    {{ props.cardItem.name }}
-                </v-card-title>
-            </div>
-            <v-chip
-                label
-                class="status-chip"
-            >
-                <v-icon
-                start
-                :icon="statusIcon"
-                >
-                    {{ props.cardItem.status }}
-                </v-icon>
-
-            </v-chip>
-        </v-card-item>
-        <v-card-text>
-            
-            
-        </v-card-text>
+        <v-btn 
+          color="warning"
+          variant="tonal"
+          @click="quickCheck"
+        >
+          Проверить
+        </v-btn>
+      </v-card-actions>
     </v-card>
-    
-</template>
-
-<script setup lang="ts">
-    import { Client } from '@/types/Client';
-import { Status } from '@/utils/enum';
-import { SassColor } from 'sass';
-import { computed, ref } from 'vue';
-    const isHovered = ref(false);
-
-    
-
-    //// 
-    //// for check html
-    ////
-    const dateBuf = new Date(2025,6,20,17,47,0);
-    const CardItem :Client={
-        id:-1,
-        name:'',
-        status:Status.Active,
-        lastUpdate:dateBuf
-    };
-    ////
-    ////
-    ////
-
-    // reactive props
-    const props = withDefaults(defineProps<{
-        cardItem:Client
-    }>(),{
-        cardItem:()=>({
-            id:-1,
-            name:'No name',
-            status:Status.Active,
-            lastUpdate:new Date()
-        })
-    });
-    
-
-    // status data
-    const statusConfig = computed(()=>
-    {
-        const config:Record<Status,{
-            color:string,
-            icon:string,
-            class:string
-        }> = {
-            'Активен':{
-                color:'success',
-                icon:'mdi-check-circle',
-                class:'active'
-            },
-            'Завершен':{
-                color:"grey",
-                icon:'mdi-',
-                class:'complite'
-            },
-            'Новый':{
-                color:"blue",
-                icon:'mdi-new-box',
-                class:'new'
-            },
-            'Проблемы':{
-                color:'red',
-                icon:'mdi-alert',
-                class:'problems'
-            },
-            'Проверка':{
-                color:'',
-                icon:'',
-                class:'check'
-            }
-            }
-            return config[props.cardItem.status]
+  </template>
+  
+  <script setup lang="ts">
+  import { computed } from 'vue';
+  import { Status } from '@/utils/enum';
+  import { translateStatus } from '@/utils/helper';
+  import type { Client } from '@/types/Client';
+  
+  const props = defineProps<{
+    client: Client
+  }>();
+  
+  const emit = defineEmits(['change-status', 'quick-check']);
+  
+  const statusText = computed(() => translateStatus(props.client.status));
+  const formattedDate = computed(() => 
+    props.client.lastUpdate.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit'
     })
-// computed color icons class
-const statusColor=computed(()=> statusConfig.value.color)
-const statusIcon=computed(()=>statusConfig.value.icon)
-const statusClass= computed(()=>statusConfig.value.class)
-
-</script>
-<style lang="sass" module>
-
-
-</style>
+  );
+  
+  const statusColor = computed(() => {
+    switch (props.client.status) {
+      case Status.Active: return 'success';
+      case Status.Problem: return 'error';
+      case Status.Compl: return 'info';
+      case Status.Check: return 'warning';
+      default: return 'primary';
+    }
+  });
+  
+  function changeStatus() {
+    emit('change-status', props.client.status);
+  }
+  
+  function quickCheck() {
+    emit('quick-check', props.client.id);
+  }
+  </script>
+  
+  <style scoped>
+  .client-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .v-card-title {
+    padding-bottom: 8px;
+  }
+  
+  .v-card-text {
+    flex-grow: 1;
+  }
+  
+  .v-card-actions {
+    padding-top: 0;
+  }
+  </style>

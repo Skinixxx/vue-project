@@ -6,7 +6,7 @@ export interface Client{
     status:clientStatus;
     lastUpdate:Date;
 }
-export const enum clientStatus{
+export  enum clientStatus{
     Active='Активен',
     Problem='Проблемы',
     New='Новый',

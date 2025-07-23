@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { getClients } from "../services/serviceClient"
 import * as clientService from '../services/serviceClient';
 import { StatusCodes } from 'http-status-codes';
+import { clientStatus } from "../types/types";
 
 
   
@@ -39,7 +40,7 @@ import { StatusCodes } from 'http-status-codes';
     export const updateClientStatus= async(req: Request, res: Response) =>{
       try {
         const id = parseInt(req.params.id);
-        const newStatus = req.body.newStatus ;
+        const newStatus:clientStatus = req.body;
         
         const updatedClient = await clientService.updateStatus(id, newStatus);
         res.status(StatusCodes.OK).json(updatedClient);

@@ -6,9 +6,11 @@ const router = Router();
 
 router.param('id',validateClientId);
 
+router.post('/:id/status',clientController.updateClientStatus);
+router.get('/statuses/available',clientController.getAvailableStatuses);
+
 router.get('/',clientController.getAllClients);
 router.get('/:id',clientController.getClientById);
-router.get('/:id/status',clientController.updateClientStatus);
-router.get('/statuses/available',clientController.getAvailableStatuses);
+
 
 export default router;

@@ -22,7 +22,7 @@ try {
 
 export const writeData = async(data:Client[]):Promise<boolean> => {
     try {
-        await promises.writeFile(DATA_FILE,JSON.stringify(data,))
+        await promises.writeFile(DATA_FILE,JSON.stringify(data,null,2))
         return true;
     } catch (error) {
         console.error(`Error writing data:${error}`);

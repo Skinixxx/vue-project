@@ -27,7 +27,7 @@ export const findEntity = async(id: number):Promise<Client|undefined>=>{
 }
 
 export const updateEntityStatus = async(id:number,newStatus:clientStatus
-):Promise<boolean>=>
+):Promise<Client>=>
 {
     const clients = await readData();
     const clientsIndex = clients.findIndex(c=> c.id==id);
@@ -39,15 +39,16 @@ export const updateEntityStatus = async(id:number,newStatus:clientStatus
     const old_status= clients[clientsIndex].status;
 
     clients[clientsIndex].status=newStatus;
-    funcLastUpdate(clients[clientsIndex]);
+    clients[clientsIndex].lastUpdate = new Date();
     console.info(`Sussefully update Client status. Old:${old_status}. New:${
         clients[clientsIndex].status}`);
         
     try {
+        // тут ошибка была попробую устранить
         await writeData(clients);
-        return true;
+        return clients[clientsIndex];
     } catch (error) {
         console.error('Error saving clients data');
-        return false;
+        throw error;
     }
 }

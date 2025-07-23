@@ -19,6 +19,7 @@ app.use('/api/clients',clientRouter);
 
 app.get('/', (_req, res) => {
     res.send('🗃️  Accounting Widget Backend is up and running!')
+    
   });
 
 
