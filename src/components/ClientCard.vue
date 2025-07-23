@@ -60,9 +60,16 @@ import { computed, ref } from 'vue';
     ////
 
     // reactive props
-    const props = defineProps<{
+    const props = withDefaults(defineProps<{
         cardItem:Client
-    }>()
+    }>(),{
+        cardItem:()=>({
+            id:-1,
+            name:'No name',
+            status:Status.Active,
+            lastUpdate:new Date()
+        })
+    });
     
 
     // status data

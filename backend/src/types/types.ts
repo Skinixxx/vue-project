@@ -3,10 +3,10 @@ export type ID_client= number;
 export interface Client{
     id:ID_client;
     name:string;
-    status:Status;
+    status:clientStatus;
     lastUpdate:Date;
 }
-export const enum Status{
+export const enum clientStatus{
     Active='Активен',
     Problem='Проблемы',
     New='Новый',
